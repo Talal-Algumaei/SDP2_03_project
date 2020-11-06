@@ -1,0 +1,366 @@
+{% extends 'base.html'%}
+{% block content%}
+    
+<div id="layoutSidenav_content">
+    <main>
+        <div class="container-fluid">
+            <h1 class="mt-4">Dashboard</h1>
+            <ol class="breadcrumb mb-4">
+                <li class="breadcrumb-item active">Welcome</li>
+            </ol>
+            <div class="row">
+                <div class="col-xl-3 col-md-6">
+                    <div class="card bg-primary text-white mb-4">
+                        <div class="card-body"> Total Number of Jobs</div>
+                        <div class="card-body align-self-center" id="total_print_jobs"><h1>{{ track_list.number_of_jobs}}</h1> </div>     
+                        <div class="card-footer d-flex align-items-center justify-content-between"></div>
+                    </div>
+                </div>
+                <div class="col-xl-3 col-md-6">
+                    <div class="card bg-warning text-white mb-4">
+                        <div class="card-body" > Undergoing Print Jobs </div>
+                        <div class="card-body align-self-center" id="Undergoing-print-jobs"><h1>{{ track_list.Undergoing_jobs}}</h1> </div>
+                        <div class="card-footer d-flex align-items-center justify-content-between"></div>   
+                    </div>
+                </div>
+                <div class="col-xl-3 col-md-6">
+                    <div class="card bg-success text-white mb-4">
+                        <div class="card-body">Successful Prints</div>
+                        <div class="card-body align-self-center" id="successful-print-jobs"><h1>{{ track_list.successful_prints}}</h1> </div>  
+                        <div class="card-footer d-flex align-items-center justify-content-between"></div>
+                    </div>
+                </div>
+                <div class="col-xl-3 col-md-6">
+                    <div class="card bg-danger text-white mb-4">
+                        <div class="card-body">Printing errors</div>
+                        <div class="card-body align-self-center" id="print-errors"><h1>{{ track_list.error_prints}}</h1> </div>
+                        <div class="card-footer d-flex align-items-center justify-content-between"></div>
+                    </div>
+                </div>
+            </div>
+            
+            <div class="row">
+                <div class="col-xl-6">
+                    <div class="card mb-4">
+                        <div class="card-header">
+                            <i class="fas fa-chart-area mr-1"></i>
+                            Nozzle Temperature 
+                        </div>
+                        <div class="card-body"><canvas id="myChart" width="100%" height="40"></canvas></div>
+                    </div>
+                </div>
+                <div class="col-xl-6">
+                    <div class="card mb-4">
+                        <div class="card-header">
+                            <i class="fas fa-chart-area mr-1"></i>
+                            Bed Temperature 
+                        </div>
+                        <div class="card-body"><canvas id="myChart2" width="100%" height="40"></canvas></div>
+                    </div>
+                </div>
+            </div>
+            <div class="card mb-4">
+                <div class="card-header">
+                    <i class="fas fa-info mr-1"></i>
+                    Sensors values
+                    
+                </div>
+                <div class="card-body">
+                    <div class="table-responsive">
+                        <table class="table table-bordered"  width="100%" cellspacing="0">
+                            <thead>
+                                <tr>
+                                    <th>Part</th>
+                                    <th>value</th>
+                                    <th>Status</th>
+                                </tr>
+                            </thead>
+                            
+                            <tbody>
+                                <tr>
+                                    <td>Bed </td>
+                                    <td id="Nozzel-data">275 C</td>
+                                    <td>idel</td>
+                                </tr>
+                                <tr>
+                                    <td>Nozzle </td>
+                                    <td id="Bed-data">80 C</td>
+                                    <td>idel</td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+            <div class="card mb-4">
+                <div class="card-header">
+                    <i class="fas fa-file mr-1"></i>
+                    Printing files 
+                </div>
+                <div class="card-body">
+                    <div class="table-responsive">
+                        <table class="table table-bordered" id="dataTable" width="100%" cellspacing="0">
+                            <thead>
+                                <tr>
+                                   
+                                    <th>File Name</th>
+                                    <th>Type</th>
+                                    <th>Status</th>
+                                    <th>Tool installed</th>
+                                    <th>Time started</th>
+                                    <th>Estimated time</th>
+                                    <th>Finish time</th>
+                                    <th>Control</th>
+                                    <th>Delete</th>
+                                </tr>
+                            </thead>
+                            <tfoot>
+                                <tr>
+                                   
+                                    <th>File Name</th>
+                                    <th>Type</th>
+                                    <th>Status</th>
+                                    <th>Tool installed</th>
+                                    <th>Time started</th>
+                                    <th>Estimated time</th>
+                                    <th>Finish time</th>
+                                    <th>Control</th>
+                                    <th>Delete</th>
+                                </tr>
+                            </tfoot>
+                            <tbody id="tableCon">
+                                {%for item in object_list %} 
+                                <tr>
+                                    
+                                    <td>{{ item.file_name}}</td>
+                                    <td>{{ item.type_of_print}}</td>
+                                    <td>{{ item.machine_state}}</td>
+                                    <th>{{ item.tool_installed}}</th>
+                                    <td>{{ item.time_of_print_start}}</td>
+                                    <td>{{ item.total_print_time}}H</td>
+                                    <td>{{ item.time_of_print_finish}}</td>
+                                    <td id="control-row"><Button button id="Start" type="button" class="btn btn-success"> Start</Button></td>
+                                    <td><button type="button" title="{{item.id}}" class="btn btn-danger">Delete</button></td>
+                                    
+                                </tr>
+                                {% endfor %}
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+        </div>
+       <p style="display: none;">{{csrf_token}}</p>
+
+         
+    </main>
+    <footer class="py-4 bg-light mt-auto">
+        <div class="container-fluid">
+            <div class="d-flex align-items-center justify-content-between small">
+                <div class="text-muted">Copyright &copy; SDP project 2020</div>
+                <div>
+                    <a href="#">Privacy Policy</a>
+                    &middot;
+                    <a href="#">Terms &amp; Conditions</a>
+                </div>
+            </div>
+        </div>
+    </footer>
+</div>
+{% endblock%}
+
+
+<script>
+    {% block jquery %}
+        function getCookie(name) {
+			let cookieValue = null;
+			if (document.cookie && document.cookie !== '') {
+				const cookies = document.cookie.split(';');
+				for (let i = 0; i < cookies.length; i++) {
+					const cookie = cookies[i].trim();
+					// Does this cookie string begin with the name we want?
+					if (cookie.substring(0, name.length + 1) === (name + '=')) {
+						cookieValue = decodeURIComponent(cookie.substring(name.length + 1));
+						break;
+					}
+				}
+			}
+			return cookieValue;
+		}
+		const csrftoken = getCookie('csrftoken');
+        let socket = new WebSocket('ws://127.0.0.1:8000/ws/polData/');
+        socket.onopen =function(e){
+            
+        };
+        $('#Start').on('click', function(){
+            socket.send(JSON.stringify({
+                "temp_N":111,
+                "temp_B":111,
+                 "data":"helloworld"
+                }))
+            })
+        socket.onmessage = function(e){
+            console.log(e.data);
+            var recData=JSON.parse(e.data);
+            dataObjNew=dataObj['data']['datasets'][0]['data'];
+            dataObjNew.shift();
+            dataObjNew.push(recData.temp_N);
+            dataObj['data']['datasets'][0]['data']=dataObjNew;
+            window.myLine1.update();
+            
+            dataObjNew=dataObj2['data']['datasets'][0]['data'];
+            dataObjNew.shift();
+            dataObjNew.push(recData.temp_B);
+            dataObj2['data']['datasets'][0]['data']=dataObjNew;
+            window.myLine2.update();
+            let firstTD  =  document.getElementById("Nozzel-data");
+            let SecondTD =  document.getElementById("Bed-data");
+            firstTD.innerHTML = recData.temp_N + " C"
+            SecondTD.innerHTML = recData.temp_B - 200  + " C"
+        };
+    
+        socket.onclose = function(e){
+            
+        };
+        
+        var dataObj={
+            type: 'line',
+            data: {
+                labels: [' ',' ',' ',' ',' ',' ',' ',' ',' ',' '],
+                datasets: [{
+                    label: 'Nozzle Temperature readings ',
+                    data: [0,1,1,2,4,3,3,4,6,5],
+                    lineTension: 0.3,
+                    backgroundColor: "rgba(2,117,216,0.2)",
+                    borderColor: "rgba(2,117,216,1)",
+                    pointRadius: 5,
+                    pointBackgroundColor: "rgba(2,117,216,1)",
+                    pointBorderColor: "rgba(255,255,255,0.8)",
+                    pointHoverRadius: 5,
+                    pointHoverBackgroundColor: "rgba(2,117,216,1)",
+                    pointHitRadius: 50,
+                    pointBorderWidth: 2,
+                }]
+            },
+            options: {
+                scales: {
+                    xAxes: [{
+                        time: {
+                            unit: 'time'
+                        },
+                        scaleLabel: {
+                                display: true,
+                                labelString: 'Time in (s)',
+                                fontSize: 14,
+                            },
+                        gridLines: {
+                            display: true
+                        },
+                        }],
+                    yAxes: [{
+                        ticks: {
+                            beginAtZero: true
+                        },
+                        
+                    }]
+                }
+            }
+        }
+        var dataObj2={
+            type: 'line',
+            data: {
+                labels: [' ',' ',' ',' ',' ',' ',' ',' ',' ',' '],
+                datasets: [{
+                    label: 'Bed Temperature readings ',
+                    data: [5,1,7,2,4,1,3,8,6,5],
+                    lineTension: 0.3,
+                    backgroundColor: "rgba(2,117,216,0.2)",
+                    borderColor: "rgba(2,117,216,1)",
+                    pointRadius: 5,
+                    pointBackgroundColor: "rgba(2,117,216,1)",
+                    pointBorderColor: "rgba(255,255,255,0.8)",
+                    pointHoverRadius: 5,
+                    pointHoverBackgroundColor: "rgba(2,117,216,1)",
+                    pointHitRadius: 50,
+                    pointBorderWidth: 2,
+                }]
+            },
+            options: {
+                scales: {
+                    xAxes: [{
+                        time: {
+                            unit: 'date'
+                        },
+                        gridLines: {
+                            display: true
+                        },
+                        scaleLabel: {
+                                display: true,
+                                labelString: 'Time in (s)',
+                                fontSize: 14,
+                            },
+                        }],
+                    yAxes: [{
+                        ticks: {
+                            beginAtZero: true
+                        }
+                    }]
+                }
+            }
+        }
+        var ctx = document.getElementById('myChart').getContext('2d');
+        var ctx2 = document.getElementById('myChart2').getContext('2d');
+        window.myLine1 = new Chart(ctx,dataObj);
+        window.myLine2 = new Chart(ctx2,dataObj2);
+        $('#dataTable').DataTable({
+            "ordering": false,
+        });
+        var $table = $("#tableCon")
+        
+        $table.delegate(".btn-danger",'click',function () {
+            var $button = $(this).closest("tr")
+            var $buttonID = $(this).attr("title");
+            $.ajax({
+                type: 'DELETE',
+                url: '/api/print-dash-panel/'+$buttonID,
+                headers: {
+                        'X-CSRFToken':csrftoken,
+                        'Content-Type':'application/json'
+                        },
+                success: function() {
+                    $button.remove()
+                    alert('item deleted');
+                   
+                    $.ajax({
+                        type:"GET",
+                        url: "/api/print-data-track/1" ,
+                        success: function(data){
+                            var datatoupdate =  data.number_of_jobs -= 1;
+                            $.ajax({
+                            type:"PUT",
+                            url: "/api/print-data-track/1" ,
+                            headers: {
+                                'X-CSRFToken':csrftoken,
+                                'Content-Type':'application/json'
+                                },
+                            data: JSON.stringify({
+                                "id": 1,
+                                "number_of_jobs": datatoupdate,
+                                "Undergoing_jobs": 2,
+                                "successful_prints": 2,
+                                "error_prints": 1
+                            }), 
+                        });
+                        }
+                        
+                            });
+                            location.reload()
+                                },
+
+            });
+        });
+
+        
+        
+    {% endblock %}
+    </script>
