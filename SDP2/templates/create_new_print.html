@@ -1,0 +1,362 @@
+{% extends 'base.html'%}
+{% block sty%}
+<style>
+	@import url(https://fonts.googleapis.com/css?family=Open+Sans:700,300);
+
+	.frame {
+		position: absolute;
+		top: 10%;
+		left: 40%;
+
+		width: 600px;
+		height: 600px;
+		margin: 0;
+		border-radius: 2px;
+		box-shadow: 4px 8px 16px 0 #212529;
+		overflow: hidden;
+		background: #212529;
+		color: #212529;
+		font-family: "Open Sans", Helvetica, sans-serif;
+	}
+
+	.center {
+		position: absolute;
+		top: 50%;
+		left: 50%;
+		transform: translate(-50%, -50%);
+		width: 500px;
+		height: 500px;
+		border-radius: 3px;
+		box-shadow: 8px 10px 15px 0 rgba(0, 0, 0, 0.2);
+		background: #fff;
+		display: flex;
+		align-items: center;
+		justify-content: space-evenly;
+		flex-direction: column;
+	}
+
+	.title {
+		width: 100%;
+		height: 20px;
+		text-align: center;
+	}
+
+	h1 {
+		font-size: 36px;
+		font-weight: 300;
+		color: #666;
+	}
+
+	.dropzone {
+		width: 400px;
+		height: 150px;
+		border: 1px dashed #999;
+		border-radius: 3px;
+		text-align: center;
+	}
+
+	.upload-icon {
+		margin: 60px 2px 2px 2px;
+	}
+
+	.upload-input {
+		position: relative;
+		top: -62px;
+		left: 0;
+		width: 100%;
+		height: 100%;
+		opacity: 0;
+	}
+
+	.btnnn {
+		position: absolute;
+		bottom: 10px;
+		display: block;
+		width: 200px;
+		height: 40px;
+		background: gray;
+		color: #fff;
+		border-radius: 3px;
+		border: 0;
+		box-shadow: 0 3px 0 0 grey;
+		transition: all 0.3s ease-in-out;
+		font-size: 14px;
+	}
+
+	.questionsTo1 {
+		position: absolute;
+		left: 50px;
+		bottom: 175px;
+		margin: 0;
+		font-size: 24px;
+		text-align: left;
+	}
+
+	.questionsTo2 {
+		position: absolute;
+		left: 50px;
+		bottom: 135px;
+		margin: 0;
+		font-size: 24px;
+		text-align: left;
+	}
+
+	.questionsTo3 {
+		position: absolute;
+		left: 50px;
+		bottom: 95px;
+		margin: 0;
+		font-size: 24px;
+		text-align: left;
+	}
+
+	.questionsTo4 {
+		position: absolute;
+		left: 50px;
+		bottom: 55px;
+		margin: 0;
+		font-size: 24px;
+		text-align: left;
+	}
+
+	.btnnn:hover {
+		color: black;
+		box-shadow: 0 3px 0 0 white;
+	}
+
+	.edited {
+		display: inline;
+	}
+
+	.checkboxEdit1 {
+		position: absolute;
+		display: inline;
+		left: 420px;
+		bottom: 175px;
+		margin: 0;
+	}
+
+	.checkboxEdit2 {
+		position: absolute;
+		display: inline;
+		left: 420px;
+		bottom: 135px;
+		margin: 0;
+	}
+
+	.checkboxEdit3 {
+		position: absolute;
+		display: inline;
+		left: 420px;
+		bottom: 95px;
+		margin: 0;
+	}
+
+	.checkboxEdit4 {
+		position: absolute;
+		display: inline;
+		left: 420px;
+		bottom: 55px;
+		margin: 0;
+
+	}
+
+	.checkboxIM {
+
+		width: 25px;
+		height: 22px;
+	}
+</style>
+
+{% endblock%}
+{% block content%}
+<div id="layoutSidenav_content">
+	<main>
+		<div class="container-fluid">
+			<form id="form-to-submit" action="" method="POST" enctype="multipart/form-data"> {% csrf_token %}
+				<div class="frame">
+					<div class="center">
+						<div class="title">
+							<h1>Drop file to upload</h1>
+						</div>
+
+						<div class="dropzone">
+							<img src="http://100dayscss.com/codepen/upload.svg" class="upload-icon" />
+							{{form.print_file}}
+						</div>
+
+						<div class="edited">
+							<p class="questionsTo1">Process required CNC </p>
+							<p class="checkboxEdit1"> {{form.is_print_cnc}} </p>
+
+							<p class="questionsTo2">Process required 3D </p>
+							<p class="checkboxEdit2"> {{form.is_print_3d}} </p>
+						</div>
+						<div class="edited">
+							<p class="questionsTo3">File converted to gcode</p>
+							<p class="checkboxEdit3"> {{form.is_print_file_gcode}} </p>
+						</div>
+						<div class="edited">
+							<p class="questionsTo4">Required tool installed </p>
+							<p class="checkboxEdit4"> {{form.is_tool_installed}}</p>
+						</div>
+						<button type="submit" class="btnnn" id="submit-button" value="save">Upload file</button>
+					</div>
+				</div>
+			</form>
+			{% for message in messages %}
+			<div class="alert alert-danger" role="alert">{{message}}</div>
+			{% endfor %}
+		</div>
+	</main>
+</div>
+{% endblock%}
+<script>
+	{
+		% block jquery %
+	}
+
+	function getCookie(name) {
+		let cookieValue = null;
+		if (document.cookie && document.cookie !== '') {
+			const cookies = document.cookie.split(';');
+			for (let i = 0; i < cookies.length; i++) {
+				const cookie = cookies[i].trim();
+				// Does this cookie string begin with the name we want?
+				if (cookie.substring(0, name.length + 1) === (name + '=')) {
+					cookieValue = decodeURIComponent(cookie.substring(name.length + 1));
+					break;
+				}
+			}
+		}
+		return cookieValue;
+	}
+	const csrftoken = getCookie('csrftoken');
+
+
+	function fixtrack_number(data) {
+		var id = data[data.length - 1].id
+		number_of_jobs = id
+		$.ajax({
+			type: "PUT",
+			url: "/api/print-data-track/1",
+			headers: {
+				'X-CSRFToken': csrftoken,
+				'Content-Type': 'application/json'
+			},
+			data: JSON.stringify({
+				"id": 1,
+				"number_of_jobs": number_of_jobs,
+				"Undergoing_jobs": 2,
+				"successful_prints": 2,
+				"error_prints": 1
+			}),
+		});
+	}
+
+	function hand_print_tracking(data) {
+		var number_of_jobs = data.number_of_jobs
+		var Undergoing_jobs = data.Undergoing_jobs
+		var successful_prints = data.successful_prints
+		var error_prints = data.error_prints
+		$.ajax({
+			type: 'GET',
+			url: '/api/print-dash-panel/',
+			success: fixtrack_number
+		});
+
+	}
+
+	$.ajax({
+		type: 'GET',
+		url: '/api/print-data-track/1',
+		success: hand_print_tracking
+	});
+
+
+	function setParam(data) {
+		// variables of the system
+		var print_file_name;
+		var toolinstalled_3d;
+		var toolinstalled_CNC;
+		var type_of_print;
+		var total_print_time = 4;
+		//to get date
+		var today = new Date();
+		var date = today.getFullYear() + '-' + (today.getMonth() + 1) + '-' + today.getDate();
+		var time = today.getHours() + ":" + (today.getMinutes() < 10 ? '0' : '') + today.getMinutes() + ":" + (today
+			.getSeconds() < 10 ? '0' : '') + today.getSeconds();
+		var dateTimestart = date + 'T' + time + 'Z';
+		var tod = today.getDate();
+		var Hours = today.getHours();
+		Hours += parseInt(total_print_time)
+		if (Hours > 24) {
+			Hours -= 24
+			tod = parseInt(tod) + 1
+		}
+		var datefinish = today.getFullYear() + '-' + (today.getMonth() + 1) + '-' + tod;
+		var timefinish = Hours + ":" + (today.getMinutes() < 10 ? '0' : '') + today.getMinutes() + ":" + (today
+		.getSeconds() < 10 ? '0' : '') + today.getSeconds();
+		var dateTimesEnd = datefinish + 'T' + timefinish + 'Z';
+		//logic
+		var id = data[data.length - 1].id
+		console.log(id)
+		print_file_name = data[data.length - 1].print_file.split('/')
+		console.log(print_file_name)
+		print_file_name = print_file_name[print_file_name.length - 1]
+		console.log(print_file_name)
+		print_file_name = print_file_name.replace(/^\s+|\s+$/gm, '')
+		console.log(print_file_name)
+		toolinstalled_3d = data[data.length - 1].is_print_3d
+		toolinstalled_CNC = data[data.length - 1].is_print_cnc
+
+		if (toolinstalled_3d === true) {
+			type_of_print = "3D Printing Process";
+		} else if (toolinstalled_CNC === true) {
+			type_of_print = "CNC Process";
+		}
+		// perpare data
+		updatafile = JSON.stringify({
+			"time_of_print_start": dateTimestart,
+			"time_of_print_finish": dateTimesEnd,
+			"total_print_time": "4",
+			"type_of_print": type_of_print,
+			"machine_state": "Waiting",
+			"file_name": print_file_name,
+			"tool_installed": "Yes",
+		});
+		$.ajax({
+			type: "POST",
+			url: "/api/print-dash-panel/1",
+			headers: {
+				'X-CSRFToken': csrftoken,
+				'Content-Type': 'application/json'
+			},
+			data: updatafile,
+			success: function (data) {
+				console.log("we did it" + data)
+			},
+			error: function () {
+				console.log("we did not do it")
+			}
+		})
+
+
+
+		console.log(updatafile)
+
+	};
+	$("#submit-button").click(function () {
+		$.ajax({
+			type: 'GET',
+			url: '/api/print-files/',
+			success: setParam
+
+		});
+	});
+
+
+	{
+		% endblock %
+	}
+</script>
