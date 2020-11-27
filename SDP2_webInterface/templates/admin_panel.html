@@ -6,7 +6,8 @@
         <div class="container-fluid">
             <h1 class="mt-4">Dashboard</h1>
             <ol class="breadcrumb mb-4">
-                <li class="breadcrumb-item active">Welcome: {{request.user|capfirst }}</li>
+                <li class="breadcrumb-item active">Welcome {{request.user|capfirst }}, Tool installed: CNC router
+                </li>
             </ol>
             <div class="row">
                 <div class="col-xl-3 col-md-6">
@@ -87,13 +88,13 @@
                             <tbody>
                                 <tr>
                                     <td>Bed </td>
-                                    <td id="Nozzel-data">275 C</td>
-                                    <td>idel</td>
+                                    <td id="Nozzel-data"> Unavailable</td>
+                                    <td>Unavailable</td>
                                 </tr>
                                 <tr>
                                     <td>Nozzle </td>
-                                    <td id="Bed-data">80 C</td>
-                                    <td>idel</td>
+                                    <td id="Bed-data">Unavailable</td>
+                                    <td>Unavailable</td>
                                 </tr>
                             </tbody>
                         </table>
@@ -147,8 +148,7 @@
                                     <td>{{ item.time_of_print_start}}</td>
                                     <td>{{ item.total_print_time}}H</td>
                                     <td>{{ item.time_of_print_finish}}</td>
-                                    <td id="control-row"><Button button id="Start" type="button"
-                                            class="btn btn-success"> Start</Button></td>
+                                    <td id="control-row"><Button type="button" class="btn btn-success"> Start</Button></td>
                                     <td><button type="button" title="{{item.id}}" class="btn btn-danger">Delete</button>
                                     </td>
 
@@ -327,7 +327,10 @@
         "ordering": false,
     });
     var $table = $("#tableCon")
-
+    $table.delegate(".btn-success", 'click', function () {
+        console.log(this)
+        alert("Process is starting...")
+    })
     $table.delegate(".btn-danger", 'click', function () {
         var $button = $(this).closest("tr")
         var $buttonID = $(this).attr("title");
@@ -370,7 +373,6 @@
 
         });
     });
-
 
 
     {% endblock %}

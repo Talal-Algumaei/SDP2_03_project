@@ -212,9 +212,7 @@
 </div>
 {% endblock%}
 <script>
-	{
-		% block jquery %
-	}
+	{% block jquery %}
 
 	function getCookie(name) {
 		let cookieValue = null;
@@ -235,7 +233,9 @@
 
 
 	function fixtrack_number(data) {
-		var id = data[data.length - 1].id
+		
+		var id = data[data.length - 1].id - 30
+		console.log(id)
 		number_of_jobs = id
 		$.ajax({
 			type: "PUT",
@@ -280,7 +280,7 @@
 		var toolinstalled_3d;
 		var toolinstalled_CNC;
 		var type_of_print;
-		var total_print_time = 4;
+		var total_print_time = 1;
 		//to get date
 		var today = new Date();
 		var date = today.getFullYear() + '-' + (today.getMonth() + 1) + '-' + today.getDate();
@@ -319,7 +319,7 @@
 		updatafile = JSON.stringify({
 			"time_of_print_start": dateTimestart,
 			"time_of_print_finish": dateTimesEnd,
-			"total_print_time": "4",
+			"total_print_time": total_print_time,
 			"type_of_print": type_of_print,
 			"machine_state": "Waiting",
 			"file_name": print_file_name,
@@ -356,7 +356,5 @@
 	});
 
 
-	{
-		% endblock %
-	}
+	{% endblock %}
 </script>

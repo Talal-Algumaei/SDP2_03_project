@@ -55,7 +55,7 @@ class NewPrintView(View):
                 form.save()
                 form = self.form_class
                 time.sleep(3)
-                return redirect("start-new-print")  
+                return redirect("home")  
 
         return render(request,self.template_name,{'form': form})
 
